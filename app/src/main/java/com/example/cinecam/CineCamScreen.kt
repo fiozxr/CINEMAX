@@ -405,20 +405,28 @@ fun CinematicViewfinder(
                         }
                         val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
                         cameraProviderFuture.addListener({
-                            val cameraProvider = cameraProviderFuture.get()
-                            val preview = Preview.Builder().build().also {
-                                it.setSurfaceProvider(previewView.surfaceProvider)
-                            }
-                            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
                             try {
-                                cameraProvider.unbindAll()
-                                cameraProvider.bindToLifecycle(
-                                    lifecycleOwner,
-                                    cameraSelector,
-                                    preview
-                                )
+                                val cameraProvider = cameraProviderFuture.get()
+                                val preview = Preview.Builder().build().also {
+                                    it.setSurfaceProvider(previewView.surfaceProvider)
+                                }
+                                val cameraSelector = if (cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                                    CameraSelector.DEFAULT_BACK_CAMERA
+                                } else if (cameraProvider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)) {
+                                    CameraSelector.DEFAULT_FRONT_CAMERA
+                                } else {
+                                    null
+                                }
+                                if (cameraSelector != null) {
+                                    cameraProvider.unbindAll()
+                                    cameraProvider.bindToLifecycle(
+                                        lifecycleOwner,
+                                        cameraSelector,
+                                        preview
+                                    )
+                                }
                             } catch (exc: Exception) {
-                                // Camera unbind failed
+                                exc.printStackTrace()
                             }
                         }, ContextCompat.getMainExecutor(ctx))
                         previewView
@@ -1517,6 +1525,7 @@ fun LutsStudioPanel(viewModel: CineCamViewModel, onChooseImage: () -> Unit) {
 // C. CREATIVE GRADIN SUITE (GRAIN, FLARING, SCENIC CHOOSER)
 @Composable
 fun CreativeLabPanel(viewModel: CineCamViewModel) {
+    val context = LocalContext.current
     val grainIntensity by viewModel.grainIntensity.collectAsState()
     val vignetteIntensity by viewModel.vignetteIntensity.collectAsState()
     val anamorphicFlareIntensity by viewModel.anamorphicFlareIntensity.collectAsState()
@@ -1666,6 +1675,123 @@ fun CreativeLabPanel(viewModel: CineCamViewModel) {
                 modifier = Modifier.weight(1f)
             )
             Text("${(vignetteIntensity * 100).toInt()}%", color = Color(0xFFD1E4FF), fontWeight = FontWeight.Bold, fontSize = 11.sp, fontFamily = FontFamily.Monospace, modifier = Modifier.padding(start = 6.dp))
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        // Professional System Settings & Developer Credits Card
+        var showSettingsDetails by remember { mutableStateOf(false) }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFF1D2026), RoundedCornerShape(20.dp))
+                .border(1.dp, Color(0xFF2F333D), RoundedCornerShape(20.dp))
+                .clickable { showSettingsDetails = !showSettingsDetails }
+                .padding(12.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "System Settings",
+                        tint = Color(0xFFD1E4FF),
+                        modifier = Modifier.size(14.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "SYSTEM SETTINGS & CREDITS",
+                        color = Color.White,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
+                Icon(
+                    imageVector = if (showSettingsDetails) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = if (showSettingsDetails) "Collapse" else "Expand",
+                    tint = Color(0xFFA8ABB4),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+
+            if (showSettingsDetails) {
+                Spacer(modifier = Modifier.height(10.dp))
+                HorizontalDivider(color = Color(0xFF2F333D), thickness = 0.5.dp)
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Credits section
+                Text(
+                    text = "CINE DESIGNER & CONTRIBUTOR",
+                    color = Color(0xFFA8ABB4),
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column {
+                        Text(
+                            text = "@fiozxr_",
+                            color = Color(0xFFD1E4FF),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "github.com/fiozxr",
+                            color = Color(0xFFA8ABB4),
+                            fontSize = 9.5.sp,
+                            fontFamily = FontFamily.Monospace
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            val uri = Uri.parse("https://github.com/fiozxr")
+                            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, uri)
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF2F333D),
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                        modifier = Modifier.height(28.dp)
+                    ) {
+                        Text("GITHUB", fontSize = 9.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Build Target
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("PLATFORM DESCRIPTOR", color = Color(0xFFA8ABB4), fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                    Text("ANDROID 7.0+ (API 24+)", color = Color(0xFFFFCC33), fontSize = 9.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("BUILD SPECIFICATION", color = Color(0xFFA8ABB4), fontSize = 9.sp, fontFamily = FontFamily.Monospace)
+                    Text("v1.0.0 Pro Studio Edition", color = Color(0xFFD1E4FF), fontSize = 9.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                }
+            }
         }
     }
 }
