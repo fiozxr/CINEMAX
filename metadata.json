@@ -1,0 +1,6 @@
+{
+  "name": "CineCam",
+  "description": "Professional cinematic camera and video editor featuring over 60 live LUTs, interactive manual lens controls (ISO, Shutter, Kelvin WB, Focus), custom safe guide overlays, and EXIF film-borders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

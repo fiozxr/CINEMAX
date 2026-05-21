@@ -1,0 +1,65 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Cine Camera Body Base Silhouette -->
+    <path
+        android:fillColor="#D2D6E2"
+        android:pathData="M32,32 h44 a6,6 0 0 1 6,6 v32 a6,6 0 0 1 -6,6 h-44 a6,6 0 0 1 -6,-6 v-32 a6,6 0 0 1 6,-6 z" />
+
+    <!-- Top Handle/Accessory Shoe Mount -->
+    <path
+        android:fillColor="#4F5664"
+        android:pathData="M44,28 h20 v4 h-20 z" />
+
+    <!-- Lens Outer Barrel Ring -->
+    <path
+        android:fillColor="#1C212B"
+        android:pathData="M54,54 m-21,0 a21,21 0 1,1 42,0 a21,21 0 1,1 -42,0" />
+
+    <!-- Metallic Ring Thread -->
+    <path
+        android:fillColor="#2F3542"
+        android:pathData="M54,54 m-17,0 a17,17 0 1,1 34,0 a17,17 0 1,1 -34,0" />
+
+    <!-- Inner Professional Anamorphic Glass Element -->
+    <path
+        android:fillColor="#0C0E14"
+        android:pathData="M54,54 m-13,0 a13,13 0 1,1 26,0 a13,13 0 1,1 -26,0" />
+
+    <!-- Cine-iris Aperture Shutter Blades -->
+    <path
+        android:strokeColor="#FFCC33"
+        android:strokeWidth="1.2"
+        android:pathData="M46,45 L62,45" />
+    <path
+        android:strokeColor="#FFCC33"
+        android:strokeWidth="1.2"
+        android:pathData="M62,45 L67,58" />
+    <path
+        android:strokeColor="#FFCC33"
+        android:strokeWidth="1.2"
+        android:pathData="M67,58 L54,66" />
+    <path
+        android:strokeColor="#FFCC33"
+        android:strokeWidth="1.2"
+        android:pathData="M54,66 L41,58" />
+    <path
+        android:strokeColor="#FFCC33"
+        android:strokeWidth="1.2"
+        android:pathData="M41,58 L46,45" />
+
+    <!-- Simulated Lens Flare/Glass Reflection -->
+    <path
+        android:fillColor="#22D1E4FF"
+        android:pathData="M45,45 a10,10 0 0,1 18,0 a10,10 0 0,0 -18,0" />
+
+    <!-- Core Sensor Indicator Glowing dot (Cyan) -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M54,54 m-2.5,0 a2.5,2.5 0 1,1 5,0 a2.5,2.5 0 1,1 -5,0" />
+
+</vector>
