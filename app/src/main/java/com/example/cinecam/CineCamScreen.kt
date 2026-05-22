@@ -250,7 +250,7 @@ fun CinematicViewfinder(
 
     // Check on startup
     LaunchedEffect(Unit) {
-        permissionLauncher.launch(android.Manifest.permission.CAMERA)
+        hasCameraPermission = ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) == android.content.pm.PackageManager.PERMISSION_GRANTED
     }
 
     // Custom pixel noise factors & Kelvin adjustments applied below via custom Modifier.drawWithContent
@@ -425,7 +425,7 @@ fun CinematicViewfinder(
                                         preview
                                     )
                                 }
-                            } catch (exc: Exception) {
+                            } catch (exc: Throwable) {
                                 exc.printStackTrace()
                             }
                         }, ContextCompat.getMainExecutor(ctx))
